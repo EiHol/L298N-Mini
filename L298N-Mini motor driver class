@@ -1,0 +1,50 @@
+# Imports
+from machine import Pin, PWM
+from time import sleep
+
+class mini_L298N:
+    def __init__(self, int1_pin, int2_pin, int3_pin, int4_pin):
+        # Initializing PWM pins
+        self.int1 = PWM(Pin(int1_pin))
+        self.int2 = PWM(Pin(int2_pin))
+        self.int3 = PWM(Pin(int3_pin))
+        self.int4 = PWM(Pin(int4_pin))
+
+        # Set PWM frequency
+        self.int1.freq(1000)
+        self.int2.freq(1000)
+        self.int3.freq(1000)
+        self.int4.freq(1000)
+
+    def motor1(self, speed):
+        """Motor 1 control"""
+        if speed >= 0:
+            # Calculate PWM duty for given speed percentage
+            duty = int(65535 * (speed / 100))
+            self.int1.duty_u16(duty)
+            self.int2.duty_u16(0)
+        else:
+            # Calculate PWM duty for given speed percentage
+            duty = int(65535 * (-speed / 100))
+            self.int1.duty_u16(0)
+            self.int2.duty_u16(duty)
+            
+    def motor2(self, speed):
+        """Motor 2 control"""
+        if speed >= 0:
+            # Calculate PWM duty for given speed percentage
+            duty = int(65535 * (speed / 100))
+            self.int3.duty_u16(duty)
+            self.int4.duty_u16(0)
+        else:
+            # Calculate PWM duty for given speed percentage
+            duty = int(65535 * (-speed / 100))
+            self.int3.duty_u16(0)
+            self.int4.duty_u16(duty)
+
+    def stop(self):
+        """Stops all motors"""
+        self.int1.duty_u16(0)
+        self.int2.duty_u16(0)
+        self.int3.duty_u16(0)
+        self.int4.duty_u16(0)
